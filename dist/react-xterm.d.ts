@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Terminal } from "xterm";
+import "../node_modules/xterm/dist/xterm.css";
 export interface IXtermProps extends React.DOMAttributes<{}> {
     onChange?: (e: any) => void;
     onInput?: (e: any) => void;
@@ -17,14 +18,14 @@ export interface IXtermState {
     isFocused: boolean;
 }
 export default class XTerm extends React.Component<IXtermProps, IXtermState> {
-    xterm: Terminal;
-    container: HTMLDivElement;
-    constructor(props?: IXtermProps, context?: any);
+    xterm?: Terminal;
+    container: React.RefObject<HTMLDivElement>;
+    constructor(props: IXtermProps);
     applyAddon(addon: any): void;
     componentDidMount(): void;
     componentWillUnmount(): void;
     shouldComponentUpdate(nextProps: any, nextState: any): boolean;
-    getTerminal(): Terminal;
+    getTerminal(): Terminal | undefined;
     write(data: any): void;
     writeln(data: any): void;
     focus(): void;

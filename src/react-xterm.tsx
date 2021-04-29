@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Terminal } from "xterm";
 import className from "classnames";
+import "../node_modules/xterm/dist/xterm.css";
 // const debounce = require('lodash.debounce');
 // import styles from 'xterm/xterm.css';
 
@@ -132,7 +133,13 @@ export default class XTerm extends React.Component<IXtermProps, IXtermState> {
       this.state.isFocused ? "ReactXTerm--focused" : null,
       this.props.className
     );
-    return <div ref={this.container} className={terminalClassName} />;
+    return (
+      <div
+        ref={this.container}
+        className={terminalClassName}
+        style={this.props.style}
+      />
+    );
   }
 }
 export { Terminal, XTerm };

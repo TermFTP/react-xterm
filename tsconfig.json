@@ -17,9 +17,8 @@
     "jsx": "react",
     "outDir": "dist",
     "declaration": true,
-    "noEmit": true,
-    "rootDir": "src"
+    "baseUrl": "./"
   },
-  "include": ["src/**/*.ts*"],
+  "include": ["src/**/*"],
   "exclude": ["node_modules", ".git", "dist"]
 }

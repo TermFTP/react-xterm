@@ -1,11 +1,11 @@
 {
   "name": "@termftp/react-xterm",
-  "version": "3.6.1",
+  "version": "3.6.3",
   "description": "react wrapper for xterm.js",
   "main": "./dist/react-xterm.js",
   "types": "./dist/react-xterm.d.ts",
   "scripts": {
-    "prepublish": "tsc",
+    "prepare": "tsc --build",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "NODE_ENV=production webpack --config ./webpack.production.config.js"
   },
