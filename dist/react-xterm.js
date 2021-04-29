@@ -3,15 +3,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const React = require("react");
 const xterm_1 = require("xterm");
 exports.Terminal = xterm_1.Terminal;
-const className = require('classnames');
+const classnames_1 = require("classnames");
 class XTerm extends React.Component {
     constructor(props, context) {
         super(props, context);
-        this.onInput = data => {
+        this.onInput = (data) => {
             this.props.onInput && this.props.onInput(data);
         };
         this.state = {
-            isFocused: false
+            isFocused: false,
         };
     }
     applyAddon(addon) {
@@ -19,20 +19,20 @@ class XTerm extends React.Component {
     }
     componentDidMount() {
         if (this.props.addons) {
-            this.props.addons.forEach(s => {
+            this.props.addons.forEach((s) => {
                 const addon = require(`xterm/dist/addons/${s}/${s}.js`);
                 xterm_1.Terminal.applyAddon(addon);
             });
         }
         this.xterm = new xterm_1.Terminal(this.props.options);
         this.xterm.open(this.container);
-        this.xterm.on('focus', this.focusChanged.bind(this, true));
-        this.xterm.on('blur', this.focusChanged.bind(this, false));
+        this.xterm.on("focus", this.focusChanged.bind(this, true));
+        this.xterm.on("blur", this.focusChanged.bind(this, false));
         if (this.props.onContextMenu) {
-            this.xterm.element.addEventListener('contextmenu', this.onContextMenu.bind(this));
+            this.xterm.element.addEventListener("contextmenu", this.onContextMenu.bind(this));
         }
         if (this.props.onInput) {
-            this.xterm.on('data', this.onInput);
+            this.xterm.on("data", this.onInput);
         }
         if (this.props.value) {
             this.xterm.write(this.props.value);
@@ -40,12 +40,13 @@ class XTerm extends React.Component {
     }
     componentWillUnmount() {
         if (this.xterm) {
-            this.xterm.destroy();
+            this.xterm.dispose();
             this.xterm = null;
         }
     }
     shouldComponentUpdate(nextProps, nextState) {
-        if (nextProps.hasOwnProperty('value') && nextProps.value != this.props.value) {
+        if (nextProps.hasOwnProperty("value") &&
+            nextProps.value != this.props.value) {
             if (this.xterm) {
                 this.xterm.clear();
                 setTimeout(() => {
@@ -71,7 +72,7 @@ class XTerm extends React.Component {
     }
     focusChanged(focused) {
         this.setState({
-            isFocused: focused
+            isFocused: focused,
         });
         this.props.onFocusChange && this.props.onFocusChange(focused);
     }
@@ -88,8 +89,8 @@ class XTerm extends React.Component {
         this.props.onContextMenu && this.props.onContextMenu(e);
     }
     render() {
-        const terminalClassName = className('ReactXTerm', this.state.isFocused ? 'ReactXTerm--focused' : null, this.props.className);
-        return React.createElement("div", { ref: ref => (this.container = ref), className: terminalClassName });
+        const terminalClassName = classnames_1.default("ReactXTerm", this.state.isFocused ? "ReactXTerm--focused" : null, this.props.className);
+        return (React.createElement("div", { ref: (ref) => (this.container = ref), className: terminalClassName }));
     }
 }
 exports.default = XTerm;

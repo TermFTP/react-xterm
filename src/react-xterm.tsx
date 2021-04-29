@@ -24,10 +24,10 @@ export interface IXtermState {
 }
 
 export default class XTerm extends React.Component<IXtermProps, IXtermState> {
-  xterm: Terminal;
-  container: HTMLDivElement;
-  constructor(props?: IXtermProps, context?: any) {
-    super(props, context);
+  xterm?: Terminal;
+  container = React.createRef<HTMLDivElement>();
+  constructor(props: IXtermProps) {
+    super(props);
     this.state = {
       isFocused: false,
     };
@@ -44,7 +44,7 @@ export default class XTerm extends React.Component<IXtermProps, IXtermState> {
       });
     }
     this.xterm = new Terminal(this.props.options);
-    this.xterm.open(this.container);
+    this.xterm.open(this.container.current!);
     this.xterm.on("focus", this.focusChanged.bind(this, true));
     this.xterm.on("blur", this.focusChanged.bind(this, false));
     if (this.props.onContextMenu) {
@@ -64,7 +64,7 @@ export default class XTerm extends React.Component<IXtermProps, IXtermState> {
     // is there a lighter-weight way to remove the cm instance?
     if (this.xterm) {
       this.xterm.dispose();
-      this.xterm = null;
+      this.xterm = undefined;
     }
   }
   // componentWillReceiveProps(nextProps) {
@@ -82,7 +82,7 @@ export default class XTerm extends React.Component<IXtermProps, IXtermState> {
       if (this.xterm) {
         this.xterm.clear();
         setTimeout(() => {
-          this.xterm.write(nextProps.value);
+          this.xterm?.write(nextProps.value);
         }, 0);
       }
     }
@@ -132,12 +132,7 @@ export default class XTerm extends React.Component<IXtermProps, IXtermState> {
       this.state.isFocused ? "ReactXTerm--focused" : null,
       this.props.className
     );
-    return (
-      <div
-        ref={(ref) => (this.container = ref)}
-        className={terminalClassName}
-      />
-    );
+    return <div ref={this.container} className={terminalClassName} />;
   }
 }
 export { Terminal, XTerm };
