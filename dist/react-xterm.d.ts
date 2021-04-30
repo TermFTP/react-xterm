@@ -1,16 +1,13 @@
 import * as React from "react";
-import { Terminal } from "xterm";
-import "../node_modules/xterm/dist/xterm.css";
+import { ITerminalAddon, ITerminalOptions, Terminal } from "xterm";
+import "../node_modules/xterm/css/xterm.css";
 export interface IXtermProps extends React.DOMAttributes<{}> {
-    onChange?: (e: any) => void;
-    onInput?: (e: any) => void;
     onFocusChange?: Function;
-    addons?: string[];
+    addons?: ITerminalAddon[];
     onScroll?: (e: any) => void;
     onContextMenu?: (e: any) => void;
-    options?: any;
+    options?: ITerminalOptions;
     path?: string;
-    value?: string;
     className?: string;
     style?: React.CSSProperties;
 }
@@ -18,14 +15,13 @@ export interface IXtermState {
     isFocused: boolean;
 }
 export default class XTerm extends React.Component<IXtermProps, IXtermState> {
-    xterm?: Terminal;
+    xterm: Terminal;
     container: React.RefObject<HTMLDivElement>;
     constructor(props: IXtermProps);
-    applyAddon(addon: any): void;
+    applyAddon(addon: ITerminalAddon): void;
     componentDidMount(): void;
     componentWillUnmount(): void;
-    shouldComponentUpdate(nextProps: any, nextState: any): boolean;
-    getTerminal(): Terminal | undefined;
+    getTerminal(): Terminal;
     write(data: any): void;
     writeln(data: any): void;
     focus(): void;

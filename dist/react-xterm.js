@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Terminal } from "xterm";
 import className from "classnames";
-import "../node_modules/xterm/dist/xterm.css";
+import "../node_modules/xterm/css/xterm.css";
 export default class XTerm extends React.Component {
     constructor(props) {
         super(props);
@@ -9,52 +9,27 @@ export default class XTerm extends React.Component {
         this.onInput = (data) => {
             this.props.onInput && this.props.onInput(data);
         };
+        this.xterm = new Terminal(props.options);
         this.state = {
             isFocused: false,
         };
     }
     applyAddon(addon) {
-        Terminal.applyAddon(addon);
+        this.xterm.loadAddon(addon);
     }
     componentDidMount() {
-        if (this.props.addons) {
-            this.props.addons.forEach((s) => {
-                const addon = require(`xterm/dist/addons/${s}/${s}.js`);
-                Terminal.applyAddon(addon);
-            });
-        }
-        this.xterm = new Terminal(this.props.options);
+        var _a, _b, _c;
+        (_b = (_a = this.props) === null || _a === void 0 ? void 0 : _a.addons) === null || _b === void 0 ? void 0 : _b.forEach(this.applyAddon.bind(this));
         this.xterm.open(this.container.current);
-        this.xterm.on("focus", this.focusChanged.bind(this, true));
-        this.xterm.on("blur", this.focusChanged.bind(this, false));
         if (this.props.onContextMenu) {
-            this.xterm.element.addEventListener("contextmenu", this.onContextMenu.bind(this));
+            (_c = this.xterm.element) === null || _c === void 0 ? void 0 : _c.addEventListener("contextmenu", this.onContextMenu.bind(this));
         }
         if (this.props.onInput) {
-            this.xterm.on("data", this.onInput);
-        }
-        if (this.props.value) {
-            this.xterm.write(this.props.value);
+            this.xterm.onData(this.onInput);
         }
     }
     componentWillUnmount() {
-        if (this.xterm) {
-            this.xterm.dispose();
-            this.xterm = undefined;
-        }
-    }
-    shouldComponentUpdate(nextProps, nextState) {
-        if (nextProps.hasOwnProperty("value") &&
-            nextProps.value != this.props.value) {
-            if (this.xterm) {
-                this.xterm.clear();
-                setTimeout(() => {
-                    var _a;
-                    (_a = this.xterm) === null || _a === void 0 ? void 0 : _a.write(nextProps.value);
-                }, 0);
-            }
-        }
-        return false;
+        this.xterm.dispose();
     }
     getTerminal() {
         return this.xterm;

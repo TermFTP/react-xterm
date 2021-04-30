@@ -1,22 +1,21 @@
 import * as React from "react";
-import { Terminal } from "xterm";
+import { ITerminalAddon, ITerminalOptions, Terminal } from "xterm";
 import className from "classnames";
-import "../node_modules/xterm/dist/xterm.css";
+import "../node_modules/xterm/css/xterm.css";
 // const debounce = require('lodash.debounce');
 // import styles from 'xterm/xterm.css';
 
 // require ('xterm/xterm.css');
 
 export interface IXtermProps extends React.DOMAttributes<{}> {
-  onChange?: (e) => void;
-  onInput?: (e) => void;
+  // onChange?: (e) => void;
+  // onInput?: (e) => void;
   onFocusChange?: Function;
-  addons?: string[];
+  addons?: ITerminalAddon[];
   onScroll?: (e) => void;
   onContextMenu?: (e) => void;
-  options?: any;
+  options?: ITerminalOptions;
   path?: string;
-  value?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -25,84 +24,56 @@ export interface IXtermState {
 }
 
 export default class XTerm extends React.Component<IXtermProps, IXtermState> {
-  xterm?: Terminal;
+  xterm: Terminal;
   container = React.createRef<HTMLDivElement>();
   constructor(props: IXtermProps) {
     super(props);
+    this.xterm = new Terminal(props.options);
     this.state = {
       isFocused: false,
     };
   }
 
-  applyAddon(addon) {
-    Terminal.applyAddon(addon);
+  applyAddon(addon: ITerminalAddon) {
+    this.xterm.loadAddon(addon);
   }
   componentDidMount() {
-    if (this.props.addons) {
-      this.props.addons.forEach((s) => {
-        const addon = require(`xterm/dist/addons/${s}/${s}.js`);
-        Terminal.applyAddon(addon);
-      });
-    }
-    this.xterm = new Terminal(this.props.options);
+    this.props?.addons?.forEach(this.applyAddon.bind(this));
     this.xterm.open(this.container.current!);
-    this.xterm.on("focus", this.focusChanged.bind(this, true));
-    this.xterm.on("blur", this.focusChanged.bind(this, false));
+    // this.xterm.on("focus", this.focusChanged.bind(this, true));
+    // this.xterm.on("blur", this.focusChanged.bind(this, false));
     if (this.props.onContextMenu) {
-      this.xterm.element.addEventListener(
+      this.xterm.element?.addEventListener(
         "contextmenu",
         this.onContextMenu.bind(this)
       );
     }
     if (this.props.onInput) {
-      this.xterm.on("data", this.onInput);
-    }
-    if (this.props.value) {
-      this.xterm.write(this.props.value);
+      this.xterm.onData(this.onInput);
     }
   }
   componentWillUnmount() {
     // is there a lighter-weight way to remove the cm instance?
-    if (this.xterm) {
-      this.xterm.dispose();
-      this.xterm = undefined;
-    }
+    this.xterm.dispose();
   }
-  // componentWillReceiveProps(nextProps) {
-  //     if (nextProps.hasOwnProperty('value')) {
-  //         this.setState({ value: nextProps.value });
-  //     }
-  // }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    // console.log('shouldComponentUpdate', nextProps.hasOwnProperty('value'), nextProps.value != this.props.value);
-    if (
-      nextProps.hasOwnProperty("value") &&
-      nextProps.value != this.props.value
-    ) {
-      if (this.xterm) {
-        this.xterm.clear();
-        setTimeout(() => {
-          this.xterm?.write(nextProps.value);
-        }, 0);
-      }
-    }
-    return false;
-  }
   getTerminal() {
     return this.xterm;
   }
+
   write(data: any) {
     this.xterm && this.xterm.write(data);
   }
   writeln(data: any) {
     this.xterm && this.xterm.writeln(data);
   }
+
   focus() {
     if (this.xterm) {
       this.xterm.focus();
     }
   }
+
   focusChanged(focused) {
     this.setState({
       isFocused: focused,
