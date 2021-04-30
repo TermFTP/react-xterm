@@ -1,6 +1,6 @@
 {
   "name": "@termftp/react-xterm",
-  "version": "3.7.2",
+  "version": "3.7.3",
   "description": "react wrapper for xterm.js",
   "main": "./dist/react-xterm.js",
   "types": "./dist/react-xterm.d.ts",

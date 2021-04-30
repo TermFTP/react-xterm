@@ -1,7 +1,7 @@
 import * as React from "react";
 import { ITerminalAddon, ITerminalOptions, Terminal } from "xterm";
 import className from "classnames";
-import "../node_modules/xterm/css/xterm.css";
+import "xterm/css/xterm.css";
 // const debounce = require('lodash.debounce');
 // import styles from 'xterm/xterm.css';
 

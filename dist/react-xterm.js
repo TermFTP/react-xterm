@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Terminal } from "xterm";
 import className from "classnames";
-import "../node_modules/xterm/css/xterm.css";
+import "xterm/css/xterm.css";
 export default class XTerm extends React.Component {
     constructor(props) {
         super(props);

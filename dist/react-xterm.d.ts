@@ -1,6 +1,6 @@
 import * as React from "react";
 import { ITerminalAddon, ITerminalOptions, Terminal } from "xterm";
-import "../node_modules/xterm/css/xterm.css";
+import "xterm/css/xterm.css";
 export interface IXtermProps extends React.DOMAttributes<{}> {
     onFocusChange?: Function;
     addons?: ITerminalAddon[];
